@@ -1,6 +1,10 @@
+!pip install path  
+
 import streamlit as st
 import pickle
 from path import Path
+
+
 
 model = pickle.load(open('word2vec_model.pkl','rb'))
 
