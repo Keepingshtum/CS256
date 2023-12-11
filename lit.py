@@ -34,28 +34,26 @@ def get_documents():
     return corpus, filenames
 
 
-# Function to get text from the selected document
+# Function to get text from selected document
 def get_text_from_selected_doc(selected_doc):
     # Implement this function based on how your documents are stored or fetched
     # For example, if you have the documents stored locally:
     corpus_dir = 'politics'
 
     for filename in os.listdir(corpus_dir):
-        if filename == selected_doc and filename.endswith('.txt'):
+        if filename.endswith('.txt'):
             file_path = os.path.join(corpus_dir, filename)
+            filenames.append(filename)
             with open(file_path, mode='rt', encoding='utf-8') as fp:
                 document_text = fp.read()
-            return document_text  # Return the text when the selected file is found
-
-    # If the loop completes without finding the selected file, return an appropriate value or handle the case
-    return "Selected file not found"
+    return document_text
 
 # Streamlit app setup
 st.title('Document Summarizer')
 document_list, filenames = get_documents()  # Get document paths from Google Drive
 
 # Dropdown to select document
-selected_doc = st.selectbox('Select Document', '/001.txt')
+selected_doc = st.selectbox('Select Document', '001.txt')
 
 models = ['Feature Vector',"Word2Vec","TFHub","T5"]
 
