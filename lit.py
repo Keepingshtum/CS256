@@ -1,0 +1,61 @@
+import streamlit as st
+import pickle
+from path import Path
+
+model = pickle.load(open('word2vec_model.pkl','rb'))
+
+# FOR WORD2VEC
+# def get_top_sentences(model2, filename):
+#   sentences_score = []
+
+
+#   for s1 in articles_sent_tokenized[idx]:
+#       distance = model2.wv.n_similarity(s1.lower().split(), reference.lower().split())
+#       sentences_score.append((distance, s1))
+
+#   top_sentences = sorted(sentences_score)
+#   return top_sentences
+
+def get_documents():
+    corpus = []
+    filenames = []
+    #DO NOT CHANGE THIS PATH AS PROF has asked us to use this in the template.
+    corpus_dir = Path('politics')
+
+    for file_path in corpus_dir.files('*.txt'):
+        fname = file_path.split("/")
+        filenames.append(fname[-1])
+        with file_path.open(mode='rt', encoding='utf-8') as fp:
+            lines = fp.read().splitlines()
+            corpus.append([i for i in lines if i])
+
+    return corpus
+
+
+# Function to get text from selected document
+def get_text_from_selected_doc(selected_doc):
+    # Implement this function based on how your documents are stored or fetched
+    # For example, if you have the documents stored locally:
+    with open(selected_doc, 'r') as file:
+        document_text = file.read()
+    return document_text
+
+# Streamlit app setup
+st.title('Document Summarizer')
+document_list = get_documents()  # Get document paths from Google Drive
+
+# Dropdown to select document
+selected_doc = st.selectbox('Select Document', document_list)
+
+# Function to summarize and highlight
+def summarize_and_highlight(text):
+    # summary = summarize_text(text)  # Use your ML model to summarize
+    # Highlight sentences returned by the model
+    for sentence in text.split('.'):
+            st.write(sentence.strip())
+
+# Button to trigger the process
+if st.button('Process'):
+    with st.spinner('Summarizing...'):
+        document_text = get_text_from_selected_doc(selected_doc)  # Fetch text from the selected document
+        summarize_and_highlight(document_text)  # Summarize and highlight
