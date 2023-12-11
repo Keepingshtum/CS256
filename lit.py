@@ -1,9 +1,6 @@
-
 import streamlit as st
 import pickle
-from path import Path
-
-
+import os
 
 model = pickle.load(open('word2vec_model.pkl','rb'))
 
@@ -22,17 +19,19 @@ model = pickle.load(open('word2vec_model.pkl','rb'))
 def get_documents():
     corpus = []
     filenames = []
-    #DO NOT CHANGE THIS PATH AS PROF has asked us to use this in the template.
-    corpus_dir = Path('politics')
 
-    for file_path in corpus_dir.files('*.txt'):
-        fname = file_path.split("/")
-        filenames.append(fname[-1])
-        with file_path.open(mode='rt', encoding='utf-8') as fp:
-            lines = fp.read().splitlines()
-            corpus.append([i for i in lines if i])
+    # DO NOT CHANGE THIS PATH AS PROF has asked us to use this in the template.
+    corpus_dir = 'politics'
 
-    return corpus
+    for filename in os.listdir(corpus_dir):
+        if filename.endswith('.txt'):
+            file_path = os.path.join(corpus_dir, filename)
+            filenames.append(filename)
+            with open(file_path, mode='rt', encoding='utf-8') as fp:
+                lines = fp.read().splitlines()
+                corpus.append([i for i in lines if i])
+
+    return corpus, filenames
 
 
 # Function to get text from selected document
@@ -45,7 +44,7 @@ def get_text_from_selected_doc(selected_doc):
 
 # Streamlit app setup
 st.title('Document Summarizer')
-document_list = get_documents()  # Get document paths from Google Drive
+document_list,_ = get_documents()  # Get document paths from Google Drive
 
 # Dropdown to select document
 selected_doc = st.selectbox('Select Document', document_list)
