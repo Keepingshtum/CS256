@@ -49,6 +49,11 @@ document_list, filenames = get_documents()  # Get document paths from Google Dri
 # Dropdown to select document
 selected_doc = st.selectbox('Select Document', filenames)
 
+models = ['Feature Vector',"Word2Vec","TFHub","T5"]
+
+# Dropdown to select model
+selected_model = st.selectbox('Select Model', models)
+
 # Function to summarize and highlight
 def summarize_and_highlight(text):
     # summary = summarize_text(text)  # Use your ML model to summarize
