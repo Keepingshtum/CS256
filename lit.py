@@ -44,10 +44,10 @@ def get_text_from_selected_doc(selected_doc):
 
 # Streamlit app setup
 st.title('Document Summarizer')
-document_list,_ = get_documents()  # Get document paths from Google Drive
+document_list, filenames = get_documents()  # Get document paths from Google Drive
 
 # Dropdown to select document
-selected_doc = st.selectbox('Select Document', document_list)
+selected_doc = st.selectbox('Select Document', filenames)
 
 # Function to summarize and highlight
 def summarize_and_highlight(text):
