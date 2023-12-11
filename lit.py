@@ -47,7 +47,7 @@ st.title('Document Summarizer')
 document_list, filenames = get_documents()  # Get document paths from Google Drive
 
 # Dropdown to select document
-selected_doc = st.selectbox('Select Document', filenames)
+selected_doc = st.selectbox('Select Document', document_list[0])
 
 models = ['Feature Vector',"Word2Vec","TFHub","T5"]
 
