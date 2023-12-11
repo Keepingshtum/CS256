@@ -1,6 +1,7 @@
 import streamlit as st
 import pickle
 import os
+import gensim 
 
 model = pickle.load(open('word2vec_model.pkl','rb'))
 
