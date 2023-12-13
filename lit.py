@@ -36,27 +36,12 @@ def get_documents():
 
     return corpus, filenames, file_corpus_mapping
 
-
-# Function to get text from selected document
-def get_text_from_selected_doc(selected_doc):
-    # Implement this function based on how your documents are stored or fetched
-    # For example, if you have the documents stored locally:
-    corpus_dir = 'politics'
-
-    for filename in os.listdir(corpus_dir):
-        if filename.endswith('.txt'):
-            file_path = os.path.join(corpus_dir, filename)
-            filenames.append(filename)
-            with open(file_path, mode='rt', encoding='utf-8') as fp:
-                document_text = fp.read()
-    return document_text
-
 # Streamlit app setup
 st.title('Document Summarizer')
 document_list, filenames, filemappings = get_documents()  
 
 # Dropdown to select document
-selected_doc = st.selectbox('Select Document', '001.txt')
+selected_doc = st.selectbox('Select Document', filemappings.keys())
 
 models = ['Feature Vector',"Word2Vec","TFHub","T5"]
 
@@ -73,5 +58,5 @@ def summarize_and_highlight(text):
 # Button to trigger the process
 if st.button('Process'):
     with st.spinner('Summarizing...'):
-        document_text = get_text_from_selected_doc(selected_doc)  # Fetch text from the selected document
+        document_text = filemappings[selected_doc]  # Fetch text from the selected document
         summarize_and_highlight(document_text)  # Summarize and highlight
