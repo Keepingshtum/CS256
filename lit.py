@@ -52,8 +52,7 @@ selected_model = st.selectbox('Select Model', models)
 def summarize_and_highlight(text):
     # summary = summarize_text(text)  # Use your ML model to summarize
     # Highlight sentences returned by the model
-    for sentence in text.split('.'):
-            st.write(sentence.strip())
+    st.write(text)
 
 # Button to trigger the process
 if st.button('Process'):
