@@ -31,7 +31,10 @@ def get_documents():
                 lines = fp.read().splitlines()
                 corpus.append([i for i in lines if i])
 
-    return corpus, filenames
+    # Map filenames to corpus elements
+    file_corpus_mapping = {f"{i + 1:03d}.txt": corpus[i] for i in range(len(corpus))}
+
+    return corpus, filenames, file_corpus_mapping
 
 
 # Function to get text from selected document
@@ -50,7 +53,7 @@ def get_text_from_selected_doc(selected_doc):
 
 # Streamlit app setup
 st.title('Document Summarizer')
-document_list, filenames = get_documents()  # Get document paths from Google Drive
+document_list, filenames, filemappings = get_documents()  
 
 # Dropdown to select document
 selected_doc = st.selectbox('Select Document', '001.txt')
