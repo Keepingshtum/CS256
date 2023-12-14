@@ -62,9 +62,9 @@ def getmodel(selectedmodel):
     elif selectedmodel == 'T5':
         st.write("Loading T5....")
         model=AutoModelWithLMHead.from_pretrained('T5-base', return_dict=True)
-    else: #Default to Word2Vec For Now 
-        st.write("Loading Word2Vec....")
-        model = pickle.load(open('word2vec_model.pkl','rb'))
+    # else: #Default to Word2Vec For Now 
+    #     st.write("Loading Word2Vec....")
+    #     model = pickle.load(open('word2vec_model.pkl','rb'))
     return model
 
 
@@ -117,9 +117,9 @@ def summarize_and_highlight(text,model):
         st.write("Getting top sentences from T5")
         summary_from_TFHUB = run_t5_model(getmodel(model),articles_sent_tokenized,title)
         # st.write("Got from T5 : ",summary_from_TFHUB)
-    else: #Default to Word2Vec for now
-        st.write("Getting top sentences from else")
-        top_sentences,summary_from_TFHUB = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
+    # else: #Default to Word2Vec for now
+    #     st.write("Getting top sentences from else")
+    #     top_sentences,summary_from_TFHUB = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
 
     st.write(title)
     topG = summary_from_TFHUB
