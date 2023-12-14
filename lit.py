@@ -5,6 +5,7 @@ import nltk
 from nltk.tokenize import sent_tokenize
 import tensorflow_hub as hub
 from scipy.spatial import distance
+from featureVector import compute_sentence_score,calculateLongestSent
 
 #FOR T5
 from transformers import AutoTokenizer, AutoModelWithLMHead
@@ -12,6 +13,33 @@ from transformers import AutoTokenizer, AutoModelWithLMHead
 
 nltk.download('punkt')
     
+
+def runFVec_model(model,articles_sent_tokenized,title):
+    # Create a list of tuples (sentence, f_score)
+    sentence_f_scores = []
+
+    weights = {
+      'F1': 0.2,  # Title feature
+      'F2': 0.1,  # Sentence length
+      'F3': 0.3,  # Sentence position
+      'F5': 0.2,  # Term weight
+      'F6': 0.1,  # Proper noun
+      'F7': 0.1   # Numerical data
+    }
+
+    for pos in range(1, len(articles_sent_tokenized)):
+        sentence = articles_sent_tokenized[pos]
+        f_score = compute_sentence_score(sentence=sentence, entire_text=articles_sent_tokenized, title=title,
+                                         weights=weights, longest_sentence=calculateLongestSent(articles_sent_tokenized), position=pos,
+                                         total_sentences=len(articles_sent_tokenized))
+
+        sentence_f_scores.append((f_score,sentence))
+
+    # Sort sentences by F score in ascending order
+    sorted_sentences = sorted(sentence_f_scores, key=lambda x: x[1])
+
+    #Return top sentences
+    return sorted_sentences[-3:]
 
 def run_Word2Vec_model(model,articles_sent_tokenized,title):
     sentences_score = []
@@ -107,33 +135,32 @@ st.write(selected_model)
 
 # Function to summarize and highlight
 def summarize_and_highlight(text,model):
-    # TODO: Pick title 
     title = text[0]
     sentences = " ".join(text[1:])  
     articles_sent_tokenized = sent_tokenize(sentences)
     if model == 'TFHub':
         st.write("Getting top sentences from TFHub")
-        top_sentences,summary_from_TFHUB = run_tfhub_model(getmodel(model),articles_sent_tokenized,title)
+        top_sentences,summary= run_tfhub_model(getmodel(model),articles_sent_tokenized,title)
     if model == 'Word2Vec':
         st.write("Getting top sentences from Word2Vec")
-        top_sentences,summary_from_TFHUB = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
+        top_sentences,summary = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
     if model == 'T5':
         st.write("Getting top sentences from T5")
-        summary_from_TFHUB = run_t5_model(getmodel(model),articles_sent_tokenized,title)
+        summary = run_t5_model(getmodel(model),articles_sent_tokenized,title)
         # st.write("Got from T5 : ",summary_from_TFHUB)
     # else: #Default to Word2Vec for now
     #     st.write("Getting top sentences from else")
     #     top_sentences,summary_from_TFHUB = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
 
     st.write(title)
-    topG = summary_from_TFHUB
+    topG = summary
     for sentence in articles_sent_tokenized:
         if sentence in topG:
             highlight_text(sentence)
         else:
             st.write(sentence)
     st.write("Printing here the sumamry")
-    st.write(summary_from_TFHUB)
+    st.write(summary)
 
 
 def highlight_text(text, color='yellow'):

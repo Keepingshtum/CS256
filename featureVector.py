@@ -2,6 +2,7 @@ import nltk
 from nltk.tokenize import word_tokenize
 from nltk import pos_tag
 
+
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 
@@ -133,7 +134,7 @@ def compute_sentence_score(sentence, entire_text, title, weights, longest_senten
 
     return score
 
-def calulateLongestSent(sentences):
+def calculateLongestSent(sentences):
   count=0
   for sent in sentences:
     if len(sent) > count:
@@ -154,7 +155,7 @@ def summarize(n, entire_text, title, doc):
       'F7': 0.1   # Numerical data
   }
 
-  longest_sentence = calulateLongestSent(doc)
+  longest_sentence = calculateLongestSent(doc)
   total_sentences = len(doc)
 
   print("Entire text: %s"%(entire_text))
