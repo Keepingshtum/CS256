@@ -17,7 +17,7 @@ nltk.download('punkt')
 def runFVec_model(articles_sent_tokenized,title):
     # Create a list of tuples (sentence, f_score)
     sentence_f_scores = []
-
+    text = " ".join(articles_sent_tokenized)
     weights = {
       'F1': 0.2,  # Title feature
       'F2': 0.1,  # Sentence length
@@ -29,7 +29,7 @@ def runFVec_model(articles_sent_tokenized,title):
 
     for pos in range(1, len(articles_sent_tokenized)):
         sentence = articles_sent_tokenized[pos]
-        f_score = compute_sentence_score(sentence=sentence, entire_text=articles_sent_tokenized, title=title,
+        f_score = compute_sentence_score(sentence=sentence, entire_text=text, title=title,
                                          weights=weights, longest_sentence=calculateLongestSent(articles_sent_tokenized), position=pos,
                                          total_sentences=len(articles_sent_tokenized))
 
