@@ -171,17 +171,18 @@ def summarize_and_highlight(text,model,reference_summary):
         render(title,summary,articles_sent_tokenized,reference_summary)
 
 
-def render(title,summary,articles_sent_tokenized,reference_summary):
-    st.write(title)
-    for sentence in reference_summary.split("."):
+def render(title,summary,articles_sent_tokenized,affiliate_summary):
+    st.markdown("#### Top 3 sentences by model:")
+    st.markdown("---")
+    st.write(summary)
+    st.markdown("---")
+
+    st.markdown("#### Affiliated Summary")
+    for sentence in affiliate_summary.split("."):
         if sentence in summary:
             highlight_text(sentence)
         else:
             st.write(sentence)
-    st.markdown("#### Printing full summary below:")
-    st.markdown("---")
-    st.write(reference_summary)
-    st.markdown("---")
 
 def renderForT5(title,summary,articles_sent_tokenized,reference_summary):
 
