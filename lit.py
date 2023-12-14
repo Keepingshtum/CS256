@@ -78,7 +78,13 @@ def summarize_and_highlight(text,model):
     st.write(title)
     st.write(" ".join(text[1:]))
 
-    st.markdown(" ".join([sublist[1] for sublist in top_sentences]), unsafe_allow_html=True)
+    highlight_text(" ".join([sublist[1] for sublist in top_sentences]))
+
+
+def highlight_text(text, color='yellow'):
+    highlighted_text = f'<mark style="background-color: {color};">{text}</mark>'
+    st.markdown(highlighted_text, unsafe_allow_html=True)
+
 
 # Button to trigger the process
 if st.button('Process'):
