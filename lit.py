@@ -35,12 +35,12 @@ def run_tfhub_model(model,articles_sent_tokenized,title):
 
 @st.cache_resource
 def getmodel(selectedmodel):
-    # if selectedmodel == 'TFHub':
-    #     print("Loading TFhub....")
-    #     model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
-    # else:
-    #     model = pickle.load(open('word2vec_model.pkl','rb'))
-    model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+    if selectedmodel == 'TFHub':
+        print("Loading TFhub....")
+        model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+    else:
+        print("Loading Word2Vec....")
+        model = pickle.load(open('word2vec_model.pkl','rb'))
     return model
 
 # FOR WORD2VEC
@@ -93,12 +93,12 @@ def summarize_and_highlight(text,model):
     title = text[0]
     sentences = " ".join(text[1:])  
     articles_sent_tokenized = sent_tokenize(sentences)
-    # if model == 'TFHub':
-    print("Getting top sentences from TFHub")
-    top_sentences,summary_from_TFHUB = run_tfhub_model(model,articles_sent_tokenized,title)
-    # else:
-    #     print("Getting top sentences from else")
-    #     top_sentences = run_model(model,articles_sent_tokenized,title)
+    if model == 'TFHub':
+        print("Getting top sentences from TFHub")
+        top_sentences,summary_from_TFHUB = run_tfhub_model(getmodel(model),articles_sent_tokenized,title)
+    else:
+        print("Getting top sentences from else")
+        top_sentences = run_model(getmodel(model),articles_sent_tokenized,title)
     st.write(title)
     topGPrev = " ".join([sublist[1] for sublist in top_sentences])
     topG = summary_from_TFHUB
@@ -109,8 +109,6 @@ def summarize_and_highlight(text,model):
             st.write(sentence)
     st.write("Printing here the sumamry")
     st.write(summary_from_TFHUB)
-    st.write("Printing topGPrev")
-    st.write(topGPrev)
 
 
 def highlight_text(text, color='yellow'):
@@ -122,4 +120,4 @@ def highlight_text(text, color='yellow'):
 if st.button('Process'):
     with st.spinner('Summarizing...'):
         document_text = filemappings[selected_doc]  # Fetch text from the selected document
-        summarize_and_highlight(document_text,getmodel(selected_model))  # Summarize and highlight
+        summarize_and_highlight(document_text,selected_model)  # Summarize and highlight
