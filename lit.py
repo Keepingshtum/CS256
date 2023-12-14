@@ -40,7 +40,7 @@ def run_tfhub_model(model,articles_sent_tokenized,title):
     print(summary)
     return summary_sentences,summary
 
-@st.cache_resource
+
 def getmodel(selectedmodel):
     if selectedmodel == 'TFHub':
         print("Loading TFhub....")
