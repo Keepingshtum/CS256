@@ -19,7 +19,7 @@ def run_model(model,articles_sent_tokenized,title):
         sentences_score.append((distance, sentence))
 
     top_sentences = sorted(sentences_score)[-3:]
-    summary = " ".join(top_sentences)
+    summary = " ".join([sublist[1] for sublist in top_sentences])
     return top_sentences,summary
 
 def run_tfhub_model(model,articles_sent_tokenized,title):
@@ -44,17 +44,6 @@ def getmodel(selectedmodel):
         model = pickle.load(open('word2vec_model.pkl','rb'))
     return model
 
-# FOR WORD2VEC
-# def get_top_sentences(model2, filename):
-#   sentences_score = []
-
-
-#   for s1 in articles_sent_tokenized[idx]:
-#       distance = model2.wv.n_similarity(s1.lower().split(), reference.lower().split())
-#       sentences_score.append((distance, s1))
-
-#   top_sentences = sorted(sentences_score)
-#   return top_sentences
 
 def get_documents():
     corpus = []
