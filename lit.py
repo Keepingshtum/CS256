@@ -119,7 +119,6 @@ def summarize_and_highlight(text,model):
         top_sentences,summary_from_TFHUB = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
 
     st.write(title)
-    topGPrev = " ".join([sublist[1] for sublist in top_sentences])
     topG = summary_from_TFHUB
     for sentence in articles_sent_tokenized:
         if sentence in topG:
