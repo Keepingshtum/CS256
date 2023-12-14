@@ -48,6 +48,12 @@ def run_tfhub_model(model,articles_sent_tokenized,title):
 
 @st.cache_resource
 def getTFHub():
+        st.write("Loading T5....")
+        model=AutoModelWithLMHead.from_pretrained('T5-small', return_dict=True)
+        return model
+
+@st.cache_resource
+def getT5():
         st.write("Loading TFhub....")
         model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
         return model
@@ -59,8 +65,7 @@ def getmodel(selectedmodel):
         st.write("Loading Word2Vec....")
         model = pickle.load(open('word2vec_model.pkl','rb'))
     elif selectedmodel == 'T5':
-        st.write("Loading T5....")
-        model=AutoModelWithLMHead.from_pretrained('T5-base', return_dict=True)
+        model = getT5()
     # else: #Default to Word2Vec For Now 
     #     st.write("Loading Word2Vec....")
     #     model = pickle.load(open('word2vec_model.pkl','rb'))
