@@ -8,7 +8,7 @@ from scipy.spatial import distance
 
 nltk.download('punkt')
 
-def run_model(model,articles_sent_tokenized,title):
+def run_Word2Vec_model(model,articles_sent_tokenized,title):
     sentences_score = []
 
     #embedd title in the model
@@ -39,7 +39,10 @@ def getmodel(selectedmodel):
     if selectedmodel == 'TFHub':
         print("Loading TFhub....")
         model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
-    else:
+    elif selectedmodel == 'Word2Vec':
+        print("Loading Word2Vec....")
+        model = pickle.load(open('word2vec_model.pkl','rb'))
+    else: #Default to Word2Vec For Now 
         print("Loading Word2Vec....")
         model = pickle.load(open('word2vec_model.pkl','rb'))
     return model
@@ -86,9 +89,13 @@ def summarize_and_highlight(text,model):
     if model == 'TFHub':
         print("Getting top sentences from TFHub")
         top_sentences,summary_from_TFHUB = run_tfhub_model(getmodel(model),articles_sent_tokenized,title)
-    else:
+    if model == 'Word2Vec':
         print("Getting top sentences from else")
-        top_sentences,summary_from_TFHUB = run_model(getmodel(model),articles_sent_tokenized,title)
+        top_sentences,summary_from_TFHUB = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
+    else: #Default to Word2Vec for now
+        print("Getting top sentences from else")
+        top_sentences,summary_from_TFHUB = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
+
     st.write(title)
     topGPrev = " ".join([sublist[1] for sublist in top_sentences])
     topG = summary_from_TFHUB
