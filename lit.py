@@ -100,7 +100,8 @@ def summarize_and_highlight(text,model):
     #     print("Getting top sentences from else")
     #     top_sentences = run_model(model,articles_sent_tokenized,title)
     st.write(title)
-    topG = " ".join([sublist[1] for sublist in top_sentences])
+    topGPrev = " ".join([sublist[1] for sublist in top_sentences])
+    topG = summary_from_TFHUB
     for sentence in articles_sent_tokenized:
         if sentence in topG:
             highlight_text(sentence)
@@ -108,6 +109,8 @@ def summarize_and_highlight(text,model):
             st.write(sentence)
     st.write("Printing here the sumamry")
     st.write(summary_from_TFHUB)
+    st.write("Printing topGPrev")
+    st.write(topGPrev)
 
 
 def highlight_text(text, color='yellow'):
