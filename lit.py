@@ -19,7 +19,10 @@ def run_model(model,articles_sent_tokenized,title):
     top_sentences = sorted(sentences_score)
     return top_sentences[-3:]
 
-model = pickle.load(open('word2vec_model.pkl','rb'))
+
+def getmodel(selectedmodel):
+    model = pickle.load(open('word2vec_model.pkl','rb'))
+    return model
 
 # FOR WORD2VEC
 # def get_top_sentences(model2, filename):
@@ -81,4 +84,4 @@ def summarize_and_highlight(text,model):
 if st.button('Process'):
     with st.spinner('Summarizing...'):
         document_text = filemappings[selected_doc]  # Fetch text from the selected document
-        summarize_and_highlight(document_text,selected_model)  # Summarize and highlight
+        summarize_and_highlight(document_text,getmodel(selected_model))  # Summarize and highlight
