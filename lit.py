@@ -160,7 +160,7 @@ def render(title,summary,articles_sent_tokenized):
             highlight_text(sentence)
         else:
             st.write(sentence)
-    st.markdown("Printing full summary below:")
+    st.markdown("#### Printing full summary below:")
     st.markdown("---")
     st.write(summary)
     st.markdown("---")
