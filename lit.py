@@ -18,9 +18,9 @@ def run_model(model,articles_sent_tokenized,title):
         distance = model.wv.n_similarity(sentence.lower().split(), title.lower().split())
         sentences_score.append((distance, sentence))
 
-    top_sentences = sorted(sentences_score)
+    top_sentences = sorted(sentences_score)[-3:]
     summary = " ".join(top_sentences)
-    return top_sentences[-3:],summary
+    return top_sentences,summary
 
 def run_tfhub_model(model,articles_sent_tokenized,title):
     # Embed sentences using the Universal Sentence Encoder
