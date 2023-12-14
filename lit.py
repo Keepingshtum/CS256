@@ -93,10 +93,11 @@ _, _, filemappings = get_documents()
 # Dropdown to select document
 selected_doc = st.selectbox('Select Document', filemappings.keys())
 
-models = ['Feature Vector',"Word2Vec","TFHub","T5"]
+models = ["Feature Vector","Word2Vec","TFHub","T5"]
 
 # Dropdown to select model
 selected_model = st.selectbox('Select Model', models)
+st.write(selected_model)
 
 # Function to summarize and highlight
 def summarize_and_highlight(text,model):
