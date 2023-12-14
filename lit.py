@@ -31,7 +31,7 @@ def run_t5_model(model,articles_sent_tokenized,title):
     sentences_score = []
     tokenizer=AutoTokenizer.from_pretrained('T5-base')
     model = getmodel(model)
-    inputs = tokenizer.encode("summarize: " + articles_sent_tokenized, return_tensors='pt', max_length=512, truncation=True)
+    inputs = tokenizer.encode("summarize: " + " ".join(articles_sent_tokenized), return_tensors='pt', max_length=512, truncation=True)
     output = model.generate(inputs, min_length=80, max_length=100, num_return_sequences=1)
     summary = tokenizer.decode(output[0], skip_special_tokens=True)
     return summary
