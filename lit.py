@@ -3,6 +3,7 @@ import pickle
 import os
 import nltk
 from nltk.tokenize import sent_tokenize
+import tensorflow_hub as hub
 
 nltk.download('punkt')
 
@@ -21,7 +22,9 @@ def run_model(model,articles_sent_tokenized,title):
 
 
 def getmodel(selectedmodel):
-    model = pickle.load(open('word2vec_model.pkl','rb'))
+    # model = pickle.load(open('word2vec_model.pkl','rb'))
+    model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+
     return model
 
 # FOR WORD2VEC
