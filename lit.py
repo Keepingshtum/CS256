@@ -7,10 +7,11 @@ import tensorflow_hub as hub
 from scipy.spatial import distance
 
 nltk.download('punkt')
+tfhub_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
 
 def run_Word2Vec_model(model,articles_sent_tokenized,title):
     sentences_score = []
-
+    model = getmodel(model)
     #embedd title in the model
     model.train([title.lower().split()], total_examples=1, epochs=1)
 
@@ -38,7 +39,7 @@ def run_tfhub_model(model,articles_sent_tokenized,title):
 def getmodel(selectedmodel):
     if selectedmodel == 'TFHub':
         print("Loading TFhub....")
-        model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+        model = tfhub_model
     elif selectedmodel == 'Word2Vec':
         print("Loading Word2Vec....")
         model = pickle.load(open('word2vec_model.pkl','rb'))
