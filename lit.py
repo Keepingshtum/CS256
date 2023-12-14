@@ -3,12 +3,19 @@ import pickle
 import os
 import nltk
 from nltk.tokenize import sent_tokenize
+import tensorflow_hub as hub
+from scipy.spatial import distance
+
+#FOR T5
+from transformers import AutoTokenizer, AutoModelWithLMHead
+
 
 nltk.download('punkt')
+    
 
-def run_model(model,articles_sent_tokenized,title):
+def run_Word2Vec_model(model,articles_sent_tokenized,title):
     sentences_score = []
-
+    model = getmodel(model)
     #embedd title in the model
     model.train([title.lower().split()], total_examples=1, epochs=1)
 
@@ -16,24 +23,48 @@ def run_model(model,articles_sent_tokenized,title):
         distance = model.wv.n_similarity(sentence.lower().split(), title.lower().split())
         sentences_score.append((distance, sentence))
 
-    top_sentences = sorted(sentences_score)
-    return top_sentences[-3:]
+    top_sentences = sorted(sentences_score)[-3:]
+    summary = " ".join([sublist[1] for sublist in top_sentences])
+    return top_sentences,summary
+
+def run_t5_model(model,articles_sent_tokenized,title):
+    sentences_score = []
+    tokenizer=AutoTokenizer.from_pretrained('T5-base')
+    model = getmodel(model)
+    inputs = tokenizer.encode("summarize: " + articles_sent_tokenized, return_tensors='pt', max_length=512, truncation=True)
+    output = model.generate(inputs, min_length=80, max_length=100, num_return_sequences=1)
+    summary = tokenizer.decode(output[0], skip_special_tokens=True)
+    return summary
+
+
+def run_tfhub_model(model,articles_sent_tokenized,title):
+    # Embed sentences using the Universal Sentence Encoder
+    sentence_embeddings = model(articles_sent_tokenized)
+    title_embedding = model([title])
+    similarities = [1 - distance.cosine(title_embedding[0], sentence_embedding) for sentence_embedding in sentence_embeddings]
+    top_sentences_indices = sorted(range(len(similarities)), key=lambda i: similarities[i], reverse=True)[:3]  # Get top 3 indices
+    summary_sentences = [articles_sent_tokenized[i] for i in top_sentences_indices]
+    summary = " ".join(summary_sentences)
+    print("Summary is :")
+    print(summary)
+    return summary_sentences,summary
+
 
 def getmodel(selectedmodel):
-    model = pickle.load(open('word2vec_model.pkl','rb'))
+    if selectedmodel == 'TFHub':
+        print("Loading TFhub....")
+        model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+    elif selectedmodel == 'Word2Vec':
+        print("Loading Word2Vec....")
+        model = pickle.load(open('word2vec_model.pkl','rb'))
+    elif selectedmodel == 'T5':
+        print("Loading T5....")
+        model = pickle.load(open('T5_model.pkl','rb'))
+    else: #Default to Word2Vec For Now 
+        print("Loading Word2Vec....")
+        model = pickle.load(open('word2vec_model.pkl','rb'))
     return model
 
-# FOR WORD2VEC
-# def get_top_sentences(model2, filename):
-#   sentences_score = []
-
-
-#   for s1 in articles_sent_tokenized[idx]:
-#       distance = model2.wv.n_similarity(s1.lower().split(), reference.lower().split())
-#       sentences_score.append((distance, s1))
-
-#   top_sentences = sorted(sentences_score)
-#   return top_sentences
 
 def get_documents():
     corpus = []
@@ -71,16 +102,32 @@ selected_model = st.selectbox('Select Model', models)
 def summarize_and_highlight(text,model):
     # TODO: Pick title 
     title = text[0]
-    sentences = " ".join(text[1:])
+    sentences = " ".join(text[1:])  
     articles_sent_tokenized = sent_tokenize(sentences)
-    top_sentences = run_model(model,articles_sent_tokenized,title)
+    if model == 'TFHub':
+        print("Getting top sentences from TFHub")
+        top_sentences,summary_from_TFHUB = run_tfhub_model(getmodel(model),articles_sent_tokenized,title)
+    if model == 'Word2Vec':
+        print("Getting top sentences from Word2Vec")
+        top_sentences,summary_from_TFHUB = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
+    if model == 'T5':
+        print("Getting top sentences from T5")
+        summary_from_TFHUB = run_t5_model(getmodel(model),articles_sent_tokenized,title)
+        st.write("Got from T5 : ",summary_from_TFHUB)
+    else: #Default to Word2Vec for now
+        print("Getting top sentences from else")
+        top_sentences,summary_from_TFHUB = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
+
     st.write(title)
-    topG = " ".join([sublist[1] for sublist in top_sentences])
+    topGPrev = " ".join([sublist[1] for sublist in top_sentences])
+    topG = summary_from_TFHUB
     for sentence in articles_sent_tokenized:
         if sentence in topG:
             highlight_text(sentence)
         else:
             st.write(sentence)
+    st.write("Printing here the sumamry")
+    st.write(summary_from_TFHUB)
 
 
 def highlight_text(text, color='yellow'):
@@ -92,4 +139,4 @@ def highlight_text(text, color='yellow'):
 if st.button('Process'):
     with st.spinner('Summarizing...'):
         document_text = filemappings[selected_doc]  # Fetch text from the selected document
-        summarize_and_highlight(document_text,getmodel(selected_model))  # Summarize and highlight
+        summarize_and_highlight(document_text,selected_model)  # Summarize and highlight
