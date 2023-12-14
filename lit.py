@@ -16,7 +16,6 @@ nltk.download('punkt')
 def run_Word2Vec_model(model,articles_sent_tokenized,title):
     sentences_score = []
     model = getmodel(model)
-    #embedd title in the model
     model.train([title.lower().split()], total_examples=1, epochs=1)
 
     for sentence in articles_sent_tokenized:
