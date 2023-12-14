@@ -14,7 +14,7 @@ from transformers import AutoTokenizer, AutoModelWithLMHead
 nltk.download('punkt')
     
 
-def runFVec_model(model,articles_sent_tokenized,title):
+def runFVec_model(articles_sent_tokenized,title):
     # Create a list of tuples (sentence, f_score)
     sentence_f_scores = []
 
@@ -128,7 +128,6 @@ models = ["Feature Vector","Word2Vec","TFHub","T5"]
 
 # Dropdown to select model
 selected_model = st.selectbox('Select Model', models)
-st.write(selected_model)
 
 # Function to summarize and highlight
 def summarize_and_highlight(text,model):
@@ -144,7 +143,9 @@ def summarize_and_highlight(text,model):
     if model == 'T5':
         st.write("Getting top sentences from T5")
         summary = run_t5_model(getmodel(model),articles_sent_tokenized,title)
-        
+    if model == 'Feature Vector':
+        st.write("Getting top sentences from Feature Vector")   
+        summary = runFVec_model(articles_sent_tokenized,title)
 
     st.write(title)
     topG = summary
