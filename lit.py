@@ -9,7 +9,7 @@ from scipy.spatial import distance
 try:
     # Problematic code
     nltk.download('punkt')
-    tfhub_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+    # tfhub_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
     st.write("tfhub successfullt downloaded")
 except Exception as e:
     st.write("Error occurred:", e)
@@ -44,7 +44,7 @@ def run_tfhub_model(model,articles_sent_tokenized,title):
 def getmodel(selectedmodel):
     if selectedmodel == 'TFHub':
         print("Loading TFhub....")
-        model = tfhub_model
+        model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
     elif selectedmodel == 'Word2Vec':
         print("Loading Word2Vec....")
         model = pickle.load(open('word2vec_model.pkl','rb'))
