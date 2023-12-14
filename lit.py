@@ -34,7 +34,7 @@ def run_tfhub_model(model,articles_sent_tokenized,title):
 
 @st.cache_resource
 def getmodel(selectedmodel):
-    if model_type == 'TFHub':
+    if selectedmodel == 'TFHub':
         print("Loading TFhub....")
         model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
     else:
