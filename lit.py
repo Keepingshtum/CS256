@@ -168,7 +168,7 @@ def renderForT5(title,summary,articles_sent_tokenized):
     st.markdown("### So, while we won't see any matching sentences for T5, we are printing the T5 summary below, for comparison.")
 
     st.markdown("---")
-    st.write(str(summary).capitalize())
+    st.write(". ".join(sentence.capitalize() for sentence in summary))
     st.markdown("---")
 
     st.write(title)
