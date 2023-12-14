@@ -24,7 +24,7 @@ def run_model(model,articles_sent_tokenized,title):
 def run_tfhub_model(model,articles_sent_tokenized,title):
     # Embed sentences using the Universal Sentence Encoder
     sentence_embeddings = model(articles_sent_tokenized)
-    similarities = [1 - distance.cosine(title, sentence_embedding) for sentence_embedding in sentence_embeddings]
+    similarities = [1 - distance.cosine(title.lower().split(), sentence_embedding) for sentence_embedding in sentence_embeddings]
     top_sentences_indices = sorted(range(len(similarities)), key=lambda i: similarities[i], reverse=True)[:3]  # Get top 3 indices
     return [articles_sent_tokenized[i] for i in top_sentences_indices]
 
