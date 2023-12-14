@@ -48,11 +48,15 @@ def run_tfhub_model(model,articles_sent_tokenized,title):
     print(summary)
     return summary_sentences,summary
 
+@st.cache_resource
+def getTFHub():
+        st.write("Loading TFhub....")
+        model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+        return model
 
 def getmodel(selectedmodel):
     if selectedmodel == 'TFHub':
-        st.write("Loading TFhub....")
-        model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+        model = getTFHub()
     elif selectedmodel == 'Word2Vec':
         st.write("Loading Word2Vec....")
         model = pickle.load(open('word2vec_model.pkl','rb'))
