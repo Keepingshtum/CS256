@@ -179,7 +179,7 @@ def render(title,summary,articles_sent_tokenized,affiliate_summary):
         st.write(sentence)
     st.markdown("---")
 
-    st.markdown("#### Affiliated Summary")
+    st.markdown("#### Comparsion With Affiliated Summary")
     for sentence in affiliate_summary.split("."):
         if sentence in summary:
             highlight_text(sentence)
@@ -193,7 +193,7 @@ def renderForT5(title,summary,articles_sent_tokenized,reference_summary):
     st.markdown("---")
 
     st.markdown("#### T5 does not pick top sentences directly, but summarizes the article using natural language.")
-    st.markdown("#### So, while we won't see any highlighted sentences for T5, we are printing the T5 summary above. Original article is below.")
+    st.markdown("#### So, while we won't see any highlighted sentences for T5, we are printing the T5 summary above. Affiliated summary is below.")
 
     st.write(title)
     st.write(reference_summary)
