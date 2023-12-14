@@ -102,7 +102,7 @@ def get_documents():
     filenames = []
 
     # DO NOT CHANGE THIS PATH AS PROF has asked us to use this in the template.
-    corpus_dir = 'politics'
+    corpus_dir = 'Summaries\politics'
 
     for filename in os.listdir(corpus_dir):
         if filename.endswith('.txt'):
