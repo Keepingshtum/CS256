@@ -72,8 +72,6 @@ def run_tfhub_model(model,articles_sent_tokenized,title):
     top_sentences_indices = sorted(range(len(similarities)), key=lambda i: similarities[i], reverse=True)[:3]  # Get top 3 indices
     summary_sentences = [articles_sent_tokenized[i] for i in top_sentences_indices]
     summary = " ".join(summary_sentences)
-    print("Summary is :")
-    print(summary)
     return summary_sentences,summary
 
 @st.cache_resource
@@ -139,15 +137,36 @@ def summarize_and_highlight(text,model):
     if model == 'TFHub':
         st.write("Getting top sentences from TFHub")
         top_sentences,summary= run_tfhub_model(getmodel(model),articles_sent_tokenized,title)
+        render(title,summary,articles_sent_tokenized)
     if model == 'Word2Vec':
         st.write("Getting top sentences from Word2Vec")
         top_sentences,summary = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
+        render(title,summary,articles_sent_tokenized)
     if model == 'T5':
         st.write("Getting top sentences from T5")
         summary = run_t5_model(getmodel(model),articles_sent_tokenized,title)
+        renderForT5(title,summary,articles_sent_tokenized)
     if model == 'Feature Vector':
         st.write("Getting top sentences from Feature Vector")   
         summary = runFVec_model(articles_sent_tokenized,title)
+        render(title,summary,articles_sent_tokenized)
+
+
+def render(title,summary,articles_sent_tokenized):
+    st.write(title)
+    topG = summary
+    for sentence in articles_sent_tokenized:
+        if sentence in topG:
+            highlight_text(sentence)
+        else:
+            st.write(sentence)
+    st.write("Printing here the summary")
+    st.write(summary)
+
+def renderForT5(title,summary,articles_sent_tokenized):
+    st.write("T5 is a little different, in the sense that it does not pick top sentences, but directly summarizes the article using natural language.")
+    st.write("So, while we won't see any matching sentences for T5, we are printing the T5 summary below, for comparison.")
+    st.write(summary)
 
     st.write(title)
     topG = summary
@@ -156,9 +175,6 @@ def summarize_and_highlight(text,model):
             highlight_text(sentence)
         else:
             st.write(sentence)
-    st.write("Printing here the sumamry")
-    st.write(summary)
-
 
 def highlight_text(text, color='yellow'):
     highlighted_text = f'<mark style="background-color: {color};">{text}</mark>'
