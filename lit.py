@@ -37,9 +37,11 @@ def runFVec_model(articles_sent_tokenized,title):
 
     # Sort sentences by F score in ascending order
     sorted_sentences = sorted(sentence_f_scores, key=lambda x: x[1])
+    sorted_sentences = sorted_sentences[-3:]
+    summary = " ".join([sublist[1] for sublist in sorted_sentences])
 
     #Return top sentences
-    return " ".join(sorted_sentences[-3:])
+    return summary
 
 def run_Word2Vec_model(model,articles_sent_tokenized,title):
     sentences_score = []
