@@ -1,19 +1,10 @@
 import streamlit as st
 import pickle
 import os
+import nltk
 from nltk.tokenize import sent_tokenize
 
-def preprocess(corpus):
-    articles_sent_tokenized = []
-    titles = []
-    for x in corpus:
-        titles.append(x[:1])
-        sentences = " ".join(x[1:])
-        arr = sent_tokenize(sentences)
-        articles_sent_tokenized.append(arr)
-    
-    return titles, articles_sent_tokenized
-
+nltk.download('punkt')
 
 def run_model(model,articles_sent_tokenized,title):
     sentences_score = []
