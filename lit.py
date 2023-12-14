@@ -164,9 +164,12 @@ def render(title,summary,articles_sent_tokenized):
     st.write(summary)
 
 def renderForT5(title,summary,articles_sent_tokenized):
-    st.write("T5 is a little different, in the sense that it does not pick top sentences, but directly summarizes the article using natural language.")
-    st.write("So, while we won't see any matching sentences for T5, we are printing the T5 summary below, for comparison.")
+    st.markdown("### T5 is a little different, in the sense that it does not pick top sentences, but directly summarizes the article using natural language.")
+    st.markdown("### So, while we won't see any matching sentences for T5, we are printing the T5 summary below, for comparison.")
+
+    st.markdown("---")
     st.write(summary)
+    st.markdown("---")
 
     st.write(title)
     topG = summary
