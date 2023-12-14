@@ -94,9 +94,6 @@ def getmodel(selectedmodel):
         model = pickle.load(open('word2vec_model.pkl','rb'))
     elif selectedmodel == 'T5':
         model = getT5()
-    # else: #Default to Word2Vec For Now 
-    #     st.write("Loading Word2Vec....")
-    #     model = pickle.load(open('word2vec_model.pkl','rb'))
     return model
 
 
@@ -147,10 +144,7 @@ def summarize_and_highlight(text,model):
     if model == 'T5':
         st.write("Getting top sentences from T5")
         summary = run_t5_model(getmodel(model),articles_sent_tokenized,title)
-        # st.write("Got from T5 : ",summary_from_TFHUB)
-    # else: #Default to Word2Vec for now
-    #     st.write("Getting top sentences from else")
-    #     top_sentences,summary_from_TFHUB = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
+        
 
     st.write(title)
     topG = summary
