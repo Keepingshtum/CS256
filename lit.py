@@ -39,7 +39,7 @@ def runFVec_model(articles_sent_tokenized,title):
     sorted_sentences = sorted(sentence_f_scores, key=lambda x: x[1])
 
     #Return top sentences
-    return sorted_sentences[-3:]
+    return " ".join(sorted_sentences[-3:])
 
 def run_Word2Vec_model(model,articles_sent_tokenized,title):
     sentences_score = []
