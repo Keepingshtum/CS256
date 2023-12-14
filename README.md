@@ -3,6 +3,7 @@
 Steps to Deploy this project:
 
 1.> Fork this repo
+
 2.> Sign up for a Streamlit account and deploy this app, following the steps as mentioned in https://docs.streamlit.io/streamlit-community-cloud/deploy-your-app or find detailed instructions at the end of this document. 
 
 
