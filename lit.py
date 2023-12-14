@@ -75,7 +75,7 @@ models = ['Feature Vector',"Word2Vec","TFHub","T5"]
 selected_model = st.selectbox('Select Model', models)
 
 # Function to summarize and highlight
-def summarize_and_highlight(text,model,articles_sent_tokenized):
+def summarize_and_highlight(text,model):
     # TODO: Pick title 
     title = text[0]
     sentences = " ".join(text[1:])
@@ -90,4 +90,4 @@ def summarize_and_highlight(text,model,articles_sent_tokenized):
 if st.button('Process'):
     with st.spinner('Summarizing...'):
         document_text = filemappings[selected_doc]  # Fetch text from the selected document
-        summarize_and_highlight(document_text)  # Summarize and highlight
+        summarize_and_highlight(document_text,selected_model)  # Summarize and highlight
