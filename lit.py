@@ -34,11 +34,12 @@ def run_tfhub_model(model,articles_sent_tokenized,title):
 
 @st.cache_resource
 def getmodel(selectedmodel):
-    if selectedmodel == 'TFHub':
-        print("Loading TFhub....")
-        model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
-    else:
-        model = pickle.load(open('word2vec_model.pkl','rb'))
+    # if selectedmodel == 'TFHub':
+    #     print("Loading TFhub....")
+    #     model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+    # else:
+    #     model = pickle.load(open('word2vec_model.pkl','rb'))
+    model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
     return model
 
 # FOR WORD2VEC
@@ -89,14 +90,14 @@ selected_model = st.selectbox('Select Model', models)
 def summarize_and_highlight(text,model):
     # TODO: Pick title 
     title = text[0]
-    sentences = " ".join(text[1:])
+    sentences = " ".join(text[1:])  
     articles_sent_tokenized = sent_tokenize(sentences)
-    if model == 'TFHub':
-        print("Getting top sentences from TFHub")
-        top_sentences = run_tfhub_model(model,articles_sent_tokenized,title)
-    else:
-        print("Getting top sentences from else")
-        top_sentences = run_model(model,articles_sent_tokenized,title)
+    # if model == 'TFHub':
+    print("Getting top sentences from TFHub")
+    top_sentences = run_tfhub_model(model,articles_sent_tokenized,title)
+    # else:
+    #     print("Getting top sentences from else")
+    #     top_sentences = run_model(model,articles_sent_tokenized,title)
     st.write(title)
     topG = " ".join([sublist[1] for sublist in top_sentences])
     for sentence in articles_sent_tokenized:
