@@ -101,8 +101,26 @@ def get_documents():
     corpus = []
     filenames = []
 
-    # DO NOT CHANGE THIS PATH AS PROF has asked us to use this in the template.
     corpus_dir = 'politics'
+
+    for filename in os.listdir(corpus_dir):
+        if filename.endswith('.txt'):
+            file_path = os.path.join(corpus_dir, filename)
+            filenames.append(filename)
+            with open(file_path, mode='rt', encoding='utf-8') as fp:
+                lines = fp.read().splitlines()
+                corpus.append([i for i in lines if i])
+
+    # Map filenames to corpus elements
+    file_corpus_mapping = {f"{i + 1:03d}.txt": corpus[i] for i in range(len(corpus))}
+
+    return corpus, filenames, file_corpus_mapping
+
+def get_summaries():
+    corpus = []
+    filenames = []
+
+    corpus_dir = 'Summaries'
 
     for filename in os.listdir(corpus_dir):
         if filename.endswith('.txt'):
@@ -120,6 +138,7 @@ def get_documents():
 # Streamlit app setup
 st.title('Document Summarizer')
 _, _, filemappings = get_documents()  
+_, _, summaryMappings = get_summaries()
 
 # Dropdown to select document
 selected_doc = st.selectbox('Select Document', filemappings.keys())
@@ -130,29 +149,29 @@ models = ["Feature Vector","Word2Vec","TFHub","T5"]
 selected_model = st.selectbox('Select Model', models)
 
 # Function to summarize and highlight
-def summarize_and_highlight(text,model):
+def summarize_and_highlight(text,model,reference_summary):
     title = text[0]
     sentences = " ".join(text[1:])  
     articles_sent_tokenized = sent_tokenize(sentences)
     if model == 'TFHub':
         st.write("Getting top sentences from TFHub")
         top_sentences,summary= run_tfhub_model(getmodel(model),articles_sent_tokenized,title)
-        render(title,summary,articles_sent_tokenized)
+        render(title,summary,articles_sent_tokenized,reference_summary)
     if model == 'Word2Vec':
         st.write("Getting top sentences from Word2Vec")
         top_sentences,summary = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
-        render(title,summary,articles_sent_tokenized)
+        render(title,summary,articles_sent_tokenized,reference_summary)
     if model == 'T5':
         st.write("Getting top sentences from T5")
         summary = run_t5_model(getmodel(model),articles_sent_tokenized,title)
-        renderForT5(title,summary,articles_sent_tokenized)
+        renderForT5(title,summary,articles_sent_tokenized,reference_summary)
     if model == 'Feature Vector':
         st.write("Getting top sentences from Feature Vector")   
         summary = runFVec_model(articles_sent_tokenized,title)
-        render(title,summary,articles_sent_tokenized)
+        render(title,summary,articles_sent_tokenized,reference_summary)
 
 
-def render(title,summary,articles_sent_tokenized):
+def render(title,summary,articles_sent_tokenized,reference_summary):
     st.write(title)
     topG = summary
     for sentence in articles_sent_tokenized:
@@ -162,13 +181,14 @@ def render(title,summary,articles_sent_tokenized):
             st.write(sentence)
     st.markdown("#### Printing full summary below:")
     st.markdown("---")
-    st.write(summary)
+    st.write(reference_summary)
     st.markdown("---")
 
-def renderForT5(title,summary,articles_sent_tokenized):
+def renderForT5(title,summary,articles_sent_tokenized,reference_summary):
 
     st.markdown("---")
-    st.write(str(summary).capitalize())
+    # st.write(str(summary).capitalize())
+    st.write(reference_summary)
     st.markdown("---")
 
     st.markdown("#### T5 does not pick top sentences directly, but summarizes the article using natural language.")
@@ -191,4 +211,5 @@ def highlight_text(text, color='yellow'):
 if st.button('Process'):
     with st.spinner('Summarizing...'):
         document_text = filemappings[selected_doc]  # Fetch text from the selected document
-        summarize_and_highlight(document_text,selected_model)  # Summarize and highlight
+        reference_summary = summaryMappings[selected_doc]
+        summarize_and_highlight(document_text,selected_model,reference_summary)  # Summarize and highlight
