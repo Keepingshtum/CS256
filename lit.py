@@ -160,16 +160,17 @@ def render(title,summary,articles_sent_tokenized):
             highlight_text(sentence)
         else:
             st.write(sentence)
-    st.write("Printing here the summary")
+    st.markdown("Printing full summary below:")
     st.write(summary)
 
 def renderForT5(title,summary,articles_sent_tokenized):
-    st.markdown("### T5 is a little different, in the sense that it does not pick top sentences, but directly summarizes the article using natural language.")
-    st.markdown("### So, while we won't see any matching sentences for T5, we are printing the T5 summary below, for comparison.")
 
     st.markdown("---")
-    st.write(". ".join(sentence.capitalize() for sentence in summary))
+    st.write(str(summary).capitalize())
     st.markdown("---")
+
+    st.markdown("#### T5 does not pick top sentences directly, but summarizes the article using natural language.")
+    st.markdown("#### So, while we won't see any highlighted sentences for T5, we are printing the T5 summary above. Original article is below.")
 
     st.write(title)
     topG = summary
