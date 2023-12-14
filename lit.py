@@ -31,7 +31,7 @@ def run_tfhub_model(model,articles_sent_tokenized,title):
     summary = " ".join(summary_sentences)
     print("Summary is :")
     print(summary)
-    return summary_sentences
+    return summary_sentences,summary
 
 @st.cache_resource
 def getmodel(selectedmodel):
@@ -95,7 +95,7 @@ def summarize_and_highlight(text,model):
     articles_sent_tokenized = sent_tokenize(sentences)
     # if model == 'TFHub':
     print("Getting top sentences from TFHub")
-    top_sentences = run_tfhub_model(model,articles_sent_tokenized,title)
+    top_sentences,summary_from_TFHUB = run_tfhub_model(model,articles_sent_tokenized,title)
     # else:
     #     print("Getting top sentences from else")
     #     top_sentences = run_model(model,articles_sent_tokenized,title)
@@ -106,6 +106,8 @@ def summarize_and_highlight(text,model):
             highlight_text(sentence)
         else:
             st.write(sentence)
+    st.write("Printing here the sumamry")
+    st.write(summary_from_TFHUB)
 
 
 def highlight_text(text, color='yellow'):
