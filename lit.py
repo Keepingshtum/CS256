@@ -1,6 +1,32 @@
 import streamlit as st
 import pickle
 import os
+from nltk.tokenize import sent_tokenize
+
+def preprocess(corpus):
+    articles_sent_tokenized = []
+    titles = []
+    for x in corpus:
+        titles.append(x[:1])
+        sentences = " ".join(x[1:])
+        arr = sent_tokenize(sentences)
+        articles_sent_tokenized.append(arr)
+    
+    return titles, articles_sent_tokenized
+
+
+def run_model(model,articles_sent_tokenized,title):
+    sentences_score = []
+
+    #embedd title in the model
+    model.train([title.lower().split()], total_examples=1, epochs=1)
+
+    for sentence in articles_sent_tokenized:
+        distance = model.wv.n_similarity(sentence.lower().split(), title.lower().split())
+        sentences_score.append((distance, sentence))
+
+    top_sentences = sorted(sentences_score)
+    return top_sentences[-3:]
 
 model = pickle.load(open('word2vec_model.pkl','rb'))
 
@@ -38,7 +64,7 @@ def get_documents():
 
 # Streamlit app setup
 st.title('Document Summarizer')
-document_list, filenames, filemappings = get_documents()  
+_, _, filemappings = get_documents()  
 
 # Dropdown to select document
 selected_doc = st.selectbox('Select Document', filemappings.keys())
@@ -49,12 +75,16 @@ models = ['Feature Vector',"Word2Vec","TFHub","T5"]
 selected_model = st.selectbox('Select Model', models)
 
 # Function to summarize and highlight
-def summarize_and_highlight(text):
-    # summary = summarize_text(text)  # Use your ML model to summarize
-    # Highlight sentences returned by the model
+def summarize_and_highlight(text,model,articles_sent_tokenized):
+    # TODO: Pick title 
     title = text[0]
+    sentences = " ".join(text[1:])
+    articles_sent_tokenized = sent_tokenize(sentences)
+    top_sentences = run_model(model,articles_sent_tokenized,title)
     st.write(title)
     st.write(" ".join(text[1:]))
+
+    st.write(top_sentences)
 
 # Button to trigger the process
 if st.button('Process'):
