@@ -106,17 +106,17 @@ def summarize_and_highlight(text,model):
     sentences = " ".join(text[1:])  
     articles_sent_tokenized = sent_tokenize(sentences)
     if model == 'TFHub':
-        print("Getting top sentences from TFHub")
+        st.write("Getting top sentences from TFHub")
         top_sentences,summary_from_TFHUB = run_tfhub_model(getmodel(model),articles_sent_tokenized,title)
     if model == 'Word2Vec':
-        print("Getting top sentences from Word2Vec")
+        st.write("Getting top sentences from Word2Vec")
         top_sentences,summary_from_TFHUB = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
     if model == 'T5':
-        print("Getting top sentences from T5")
+        st.write("Getting top sentences from T5")
         summary_from_TFHUB = run_t5_model(getmodel(model),articles_sent_tokenized,title)
         st.write("Got from T5 : ",summary_from_TFHUB)
     else: #Default to Word2Vec for now
-        print("Getting top sentences from else")
+        st.write("Getting top sentences from else")
         top_sentences,summary_from_TFHUB = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
 
     st.write(title)
