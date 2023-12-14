@@ -174,12 +174,9 @@ def summarize_and_highlight(text,model,reference_summary):
 def render(title,summary,articles_sent_tokenized,affiliate_summary):
     st.markdown("#### Top 3 sentences by model for article with title:"+ title)
     st.markdown("---")
+
     for sentence in summary.split("."):
-        if sentence in summary:
-            highlight_text(sentence)
-        else:
-            st.write(sentence)
-    st.write(summary)
+        st.write(sentence)
     st.markdown("---")
 
     st.markdown("#### Affiliated Summary")
