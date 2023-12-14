@@ -1,6 +1,7 @@
 import streamlit as st
 import pickle
 import os
+import nltk
 from nltk.tokenize import sent_tokenize
 
 def run_model(model,articles_sent_tokenized,title):
