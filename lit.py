@@ -19,7 +19,8 @@ def run_model(model,articles_sent_tokenized,title):
         sentences_score.append((distance, sentence))
 
     top_sentences = sorted(sentences_score)
-    return top_sentences[-3:]
+    summary = " ".join(top_sentences)
+    return top_sentences[-3:],summary
 
 def run_tfhub_model(model,articles_sent_tokenized,title):
     # Embed sentences using the Universal Sentence Encoder
@@ -98,7 +99,7 @@ def summarize_and_highlight(text,model):
         top_sentences,summary_from_TFHUB = run_tfhub_model(getmodel(model),articles_sent_tokenized,title)
     else:
         print("Getting top sentences from else")
-        top_sentences = run_model(getmodel(model),articles_sent_tokenized,title)
+        top_sentences,summary_from_TFHUB = run_model(getmodel(model),articles_sent_tokenized,title)
     st.write(title)
     topGPrev = " ".join([sublist[1] for sublist in top_sentences])
     topG = summary_from_TFHUB
