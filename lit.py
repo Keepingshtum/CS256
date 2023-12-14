@@ -212,4 +212,4 @@ if st.button('Process'):
     with st.spinner('Summarizing...'):
         document_text = filemappings[selected_doc]  # Fetch text from the selected document
         reference_summary = summaryMappings[selected_doc]
-        summarize_and_highlight(document_text,selected_model,reference_summary)  # Summarize and highlight
+        summarize_and_highlight(document_text,selected_model," ".join(reference_summary))  # Summarize and highlight
