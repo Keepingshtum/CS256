@@ -3,6 +3,7 @@ import pickle
 import os
 import nltk
 from nltk.tokenize import sent_tokenize
+from scipy.spatial import distance
 import tensorflow_hub as hub
 
 nltk.download('punkt')
@@ -20,6 +21,12 @@ def run_model(model,articles_sent_tokenized,title):
     top_sentences = sorted(sentences_score)
     return top_sentences[-3:]
 
+def run_tfhub_model(model,articles_sent_tokenized,title):
+    # Embed sentences using the Universal Sentence Encoder
+    sentence_embeddings = model(articles_sent_tokenized)
+    similarities = [1 - distance.cosine(title, sentence_embedding) for sentence_embedding in sentence_embeddings]
+    top_sentences_indices = sorted(range(len(similarities)), key=lambda i: similarities[i], reverse=True)[:3]  # Get top 3 indices
+    return [articles_sent_tokenized[i] for i in top_sentences_indices]
 
 def getmodel(selectedmodel):
     # model = pickle.load(open('word2vec_model.pkl','rb'))
@@ -77,7 +84,8 @@ def summarize_and_highlight(text,model):
     title = text[0]
     sentences = " ".join(text[1:])
     articles_sent_tokenized = sent_tokenize(sentences)
-    top_sentences = run_model(model,articles_sent_tokenized,title)
+    # top_sentences = run_model(model,articles_sent_tokenized,title)
+    top_sentences = run_tfhub_model(model,articles_sent_tokenized,title)
     st.write(title)
     topG = " ".join([sublist[1] for sublist in top_sentences])
     for sentence in articles_sent_tokenized:
