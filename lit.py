@@ -4,6 +4,8 @@ import os
 import nltk
 from nltk.tokenize import sent_tokenize
 
+nltk.download('punkt')
+
 def run_model(model,articles_sent_tokenized,title):
     sentences_score = []
 
