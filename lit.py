@@ -6,6 +6,9 @@ from nltk.tokenize import sent_tokenize
 import tensorflow_hub as hub
 from scipy.spatial import distance
 
+#FOR T5
+from transformers import AutoTokenizer, AutoModelWithLMHead
+
 
 nltk.download('punkt')
     
@@ -23,6 +26,16 @@ def run_Word2Vec_model(model,articles_sent_tokenized,title):
     top_sentences = sorted(sentences_score)[-3:]
     summary = " ".join([sublist[1] for sublist in top_sentences])
     return top_sentences,summary
+
+def run_t5_model(model,articles_sent_tokenized,title):
+    sentences_score = []
+    tokenizer=AutoTokenizer.from_pretrained('T5-base')
+    model = getmodel(model)
+    inputs = tokenizer.encode("summarize: " + articles_sent_tokenized, return_tensors='pt', max_length=512, truncation=True)
+    output = model.generate(inputs, min_length=80, max_length=100, num_return_sequences=1)
+    summary = tokenizer.decode(output[0], skip_special_tokens=True)
+    return summary
+
 
 def run_tfhub_model(model,articles_sent_tokenized,title):
     # Embed sentences using the Universal Sentence Encoder
@@ -44,6 +57,9 @@ def getmodel(selectedmodel):
     elif selectedmodel == 'Word2Vec':
         print("Loading Word2Vec....")
         model = pickle.load(open('word2vec_model.pkl','rb'))
+    elif selectedmodel == 'T5':
+        print("Loading T5....")
+        model = pickle.load(open('T5_model.pkl','rb'))
     else: #Default to Word2Vec For Now 
         print("Loading Word2Vec....")
         model = pickle.load(open('word2vec_model.pkl','rb'))
@@ -92,8 +108,12 @@ def summarize_and_highlight(text,model):
         print("Getting top sentences from TFHub")
         top_sentences,summary_from_TFHUB = run_tfhub_model(getmodel(model),articles_sent_tokenized,title)
     if model == 'Word2Vec':
-        print("Getting top sentences from else")
+        print("Getting top sentences from Word2Vec")
         top_sentences,summary_from_TFHUB = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
+    if model == 'T5':
+        print("Getting top sentences from T5")
+        summary_from_TFHUB = run_t5_model(getmodel(model),articles_sent_tokenized,title)
+        st.write("Got from T5 : ",summary_from_TFHUB)
     else: #Default to Word2Vec for now
         print("Getting top sentences from else")
         top_sentences,summary_from_TFHUB = run_Word2Vec_model(getmodel(model),articles_sent_tokenized,title)
