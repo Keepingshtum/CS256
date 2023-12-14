@@ -161,7 +161,9 @@ def render(title,summary,articles_sent_tokenized):
         else:
             st.write(sentence)
     st.markdown("Printing full summary below:")
+    st.markdown("---")
     st.write(summary)
+    st.markdown("---")
 
 def renderForT5(title,summary,articles_sent_tokenized):
 
