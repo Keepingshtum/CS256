@@ -59,7 +59,7 @@ def getmodel(selectedmodel):
         model = pickle.load(open('word2vec_model.pkl','rb'))
     elif selectedmodel == 'T5':
         print("Loading T5....")
-        model = pickle.load(open('T5_model.pkl','rb'))
+        model=AutoModelWithLMHead.from_pretrained('T5-base', return_dict=True)
     else: #Default to Word2Vec For Now 
         print("Loading Word2Vec....")
         model = pickle.load(open('word2vec_model.pkl','rb'))
