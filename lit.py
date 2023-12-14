@@ -81,7 +81,7 @@ def summarize_and_highlight(text,model):
         if sentence in topG:
             highlight_text(sentence)
         else:
-            st.write(sentences)
+            st.write(sentence)
 
 
 def highlight_text(text, color='yellow'):
