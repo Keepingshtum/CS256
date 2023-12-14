@@ -173,7 +173,7 @@ def summarize_and_highlight(text,model,reference_summary):
 
 def render(title,summary,articles_sent_tokenized,reference_summary):
     st.write(title)
-    for sentence in summary:
+    for sentence in summary.split("."):
         if sentence in reference_summary:
             highlight_text(sentence)
         else:
