@@ -3,6 +3,7 @@ import pickle
 import os
 import nltk
 from nltk.tokenize import sent_tokenize
+import tensorflow_hub as hub
 
 nltk.download('punkt')
 
@@ -19,8 +20,25 @@ def run_model(model,articles_sent_tokenized,title):
     top_sentences = sorted(sentences_score)
     return top_sentences[-3:]
 
+def run_tfhub_model(model,articles_sent_tokenized,title):
+    # Embed sentences using the Universal Sentence Encoder
+    sentence_embeddings = model(articles_sent_tokenized)
+    title_embedding = model([title])
+    similarities = [1 - distance.cosine(title_embedding[0], sentence_embedding) for sentence_embedding in sentence_embeddings]
+    top_sentences_indices = sorted(range(len(similarities)), key=lambda i: similarities[i], reverse=True)[:3]  # Get top 3 indices
+    summary_sentences = [articles_sent_tokenized[i] for i in top_sentences_indices]
+    summary = " ".join(summary_sentences)
+    print("Summary is :")
+    print(summary)
+    return summary_sentences
+
+@st.cache_resource
 def getmodel(selectedmodel):
-    model = pickle.load(open('word2vec_model.pkl','rb'))
+    if model_type == 'TFHub':
+        print("Loading TFhub....")
+        model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+    else:
+        model = pickle.load(open('word2vec_model.pkl','rb'))
     return model
 
 # FOR WORD2VEC
@@ -73,7 +91,12 @@ def summarize_and_highlight(text,model):
     title = text[0]
     sentences = " ".join(text[1:])
     articles_sent_tokenized = sent_tokenize(sentences)
-    top_sentences = run_model(model,articles_sent_tokenized,title)
+    if model == 'TFHub':
+        print("Getting top sentences from TFHub")
+        top_sentences = run_tfhub_model(model,articles_sent_tokenized,title)
+    else:
+        print("Getting top sentences from else")
+        top_sentences = run_model(model,articles_sent_tokenized,title)
     st.write(title)
     topG = " ".join([sublist[1] for sublist in top_sentences])
     for sentence in articles_sent_tokenized:
