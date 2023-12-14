@@ -6,8 +6,13 @@ from nltk.tokenize import sent_tokenize
 import tensorflow_hub as hub
 from scipy.spatial import distance
 
-nltk.download('punkt')
-tfhub_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+try:
+    # Problematic code
+    nltk.download('punkt')
+    tfhub_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+    st.write("tfhub successfullt downloaded")
+except Exception as e:
+    st.write("Error occurred:", e)
 
 def run_Word2Vec_model(model,articles_sent_tokenized,title):
     sentences_score = []
