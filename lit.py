@@ -78,7 +78,7 @@ def summarize_and_highlight(text,model):
     st.write(title)
     st.write(" ".join(text[1:]))
 
-    st.write(top_sentences)
+    st.markdown(top_sentences, unsafe_allow_html=True)
 
 # Button to trigger the process
 if st.button('Process'):
