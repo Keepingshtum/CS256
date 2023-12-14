@@ -47,13 +47,13 @@ def run_tfhub_model(model,articles_sent_tokenized,title):
     return summary_sentences,summary
 
 @st.cache_resource
-def getTFHub():
+def getT5():
         st.write("Loading T5....")
         model=AutoModelWithLMHead.from_pretrained('T5-small', return_dict=True)
         return model
 
 @st.cache_resource
-def getT5():
+def getTFHub():
         st.write("Loading TFhub....")
         model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
         return model
