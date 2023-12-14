@@ -30,7 +30,6 @@ def run_Word2Vec_model(model,articles_sent_tokenized,title):
 def run_t5_model(model,articles_sent_tokenized,title):
     sentences_score = []
     tokenizer=AutoTokenizer.from_pretrained('T5-base')
-    model = getmodel(model)
     inputs = tokenizer.encode("summarize: " + " ".join(articles_sent_tokenized), return_tensors='pt', max_length=512, truncation=True)
     output = model.generate(inputs, min_length=80, max_length=100, num_return_sequences=1)
     summary = tokenizer.decode(output[0], skip_special_tokens=True)
@@ -52,16 +51,16 @@ def run_tfhub_model(model,articles_sent_tokenized,title):
 
 def getmodel(selectedmodel):
     if selectedmodel == 'TFHub':
-        print("Loading TFhub....")
+        st.write("Loading TFhub....")
         model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
     elif selectedmodel == 'Word2Vec':
-        print("Loading Word2Vec....")
+        st.write("Loading Word2Vec....")
         model = pickle.load(open('word2vec_model.pkl','rb'))
     elif selectedmodel == 'T5':
-        print("Loading T5....")
+        st.write("Loading T5....")
         model=AutoModelWithLMHead.from_pretrained('T5-base', return_dict=True)
     else: #Default to Word2Vec For Now 
-        print("Loading Word2Vec....")
+        st.write("Loading Word2Vec....")
         model = pickle.load(open('word2vec_model.pkl','rb'))
     return model
 
