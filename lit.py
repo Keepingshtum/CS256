@@ -77,7 +77,7 @@ def summarize_and_highlight(text,model):
     top_sentences = run_model(model,articles_sent_tokenized,title)
     st.write(title)
     topG = " ".join([sublist[1] for sublist in top_sentences])
-    for sentence in sentences:
+    for sentence in articles_sent_tokenized:
         if sentence in topG:
             highlight_text(sentence)
         else:
