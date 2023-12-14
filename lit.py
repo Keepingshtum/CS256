@@ -173,9 +173,8 @@ def summarize_and_highlight(text,model,reference_summary):
 
 def render(title,summary,articles_sent_tokenized,reference_summary):
     st.write(title)
-    topG = summary
-    for sentence in articles_sent_tokenized:
-        if sentence in topG:
+    for sentence in summary:
+        if sentence in reference_summary:
             highlight_text(sentence)
         else:
             st.write(sentence)
@@ -187,20 +186,14 @@ def render(title,summary,articles_sent_tokenized,reference_summary):
 def renderForT5(title,summary,articles_sent_tokenized,reference_summary):
 
     st.markdown("---")
-    # st.write(str(summary).capitalize())
-    st.write(reference_summary)
+    st.write(str(summary).capitalize())
     st.markdown("---")
 
     st.markdown("#### T5 does not pick top sentences directly, but summarizes the article using natural language.")
     st.markdown("#### So, while we won't see any highlighted sentences for T5, we are printing the T5 summary above. Original article is below.")
 
     st.write(title)
-    topG = summary
-    for sentence in articles_sent_tokenized:
-        if sentence in topG:
-            highlight_text(sentence)
-        else:
-            st.write(sentence)
+    st.write(reference_summary)
 
 def highlight_text(text, color='yellow'):
     highlighted_text = f'<mark style="background-color: {color};">{text}</mark>'
